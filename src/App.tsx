@@ -4,28 +4,20 @@ import { useTasks } from "./hooks/useTasks";
 import Watch from "./components/Watch";
 import TaskCard from "./components/TaskCard";
 import { useState, type ChangeEvent } from "react";
-import type { Task } from "./types/task";
+import type { priorityVals } from "./types/task";
 
 function App() {
   const { tasks, deleteTask, markDone } = useTasks();
-  const [selectedView, setSelectedView] = useState("");
-  const [filteredTasks, setFilteredTasks] = useState(tasks);
+  const [selectedView, setSelectedView] = useState<priorityVals | "">("");
 
-  const groupedTasks = tasks.reduce(
-    (acc, task) => {
-      acc[task.priority] = [...(acc[task.priority] || []), task];
-      return acc;
-    },
-    {} as Record<string, Task[]>,
-  );
+  const visibleTasks = selectedView
+    ? tasks.filter((task) => task.priority === selectedView)
+    : tasks;
 
   const filter = (e: ChangeEvent<HTMLInputElement>) => {
-    setSelectedView(e.target.value);
-    if (selectedView) {
-      setFilteredTasks(groupedTasks[selectedView]);
-    }
-    console.log(filteredTasks);
+    setSelectedView(e.target.value as priorityVals);
   };
+  console.log(tasks);
 
   return (
     <main className="app-shell">
@@ -56,7 +48,9 @@ function App() {
               <p className="section-kicker">Task queue</p>
               <h2>Today&apos;s tasks</h2>
             </div>
-            <span className="task-count">{tasks.length} items</span>
+            <span className="task-count">
+              {tasks.length} {tasks.length > 1 ? "tasks" : "task"}
+            </span>
             <div>
               <p>View tasks per priority</p>
               {["High", "Medium", "Low"].map((x) => (
@@ -66,7 +60,7 @@ function App() {
                     onChange={filter}
                     type="radio"
                     name="priority-filter"
-                    id={x}
+                    // id={x}
                     value={x}
                     checked={selectedView === x}
                   />
@@ -75,9 +69,9 @@ function App() {
               ))}
             </div>
           </div>
-          {filteredTasks.length > 0 ? (
+          {visibleTasks.length > 0 ? (
             <div className="task-grid">
-              {filteredTasks.map((task) => (
+              {visibleTasks.map((task) => (
                 <TaskCard
                   task={task}
                   key={task.id}
@@ -88,8 +82,16 @@ function App() {
             </div>
           ) : (
             <div className="empty-state">
-              <p>No tasks yet.</p>
-              <span>Add your first task to start filling the board.</span>
+              <p>
+                {selectedView
+                  ? `No ${selectedView.toLowerCase()} priority tasks yet.`
+                  : "No tasks yet."}
+              </p>
+              <span>
+                {selectedView
+                  ? "Try another priority or add a new task."
+                  : "Add your first task to start filling the board."}
+              </span>
             </div>
           )}
         </section>

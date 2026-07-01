@@ -13,6 +13,12 @@ function TaskCard({ task, deleteTask, markTaskDone }: TaskCardInterface) {
         ? "task-card-medium"
         : "task-card-low";
 
+  const handleDeleteTask = () => {
+    if (confirm("Are you sure you want to delete this taks?")) {
+      deleteTask();
+    } else return;
+  };
+
   return (
     <div className={`task-card ${priorityClass}`}>
       <div className="task-card-header">
@@ -20,6 +26,10 @@ function TaskCard({ task, deleteTask, markTaskDone }: TaskCardInterface) {
           {task.name}
         </h3>
         <span className="task-priority-pill">{task.priority}</span>
+      </div>
+
+      <div>
+        <p>{task.description || "No description provided."}</p>
       </div>
 
       <div className="task-meta">
@@ -44,7 +54,7 @@ function TaskCard({ task, deleteTask, markTaskDone }: TaskCardInterface) {
             <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m0 2v14H5V5zm-9 12l-4-4l1.41-1.42L10 14.17l6.59-6.59L18 9"></path>
           </svg>
         </button>
-        <button title="delete task" onClick={deleteTask}>
+        <button title="delete task" onClick={handleDeleteTask}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={24}

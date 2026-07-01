@@ -6,6 +6,7 @@ function AddTask() {
   const [task, setTask] = useState<Task>({
     id: NaN,
     name: "",
+    description: "",
     endTime: "",
     startTime: "",
     priority: "High",
@@ -51,19 +52,19 @@ function AddTask() {
 
     addTask({
       ...task,
-      id: currentDate,
+      id: Date.now(),
     });
 
     setTask({
       id: NaN,
       name: "",
+      description: "",
       endTime: "",
       startTime: "",
       priority: "High",
       finished: false,
     });
   };
-  console.log(Date.parse(task.endTime));
 
   return (
     <section className="glass-panel form-panel">
@@ -83,6 +84,18 @@ function AddTask() {
           value={task.name}
           id="task-name"
           placeholder="Design landing page"
+          onChange={handleInputChange}
+        />
+      </label>
+      <label htmlFor="task-description" className="field">
+        <span>Task description</span>
+        <textarea
+          className="field-input"
+          type="text"
+          name="description"
+          value={task.description}
+          id="task-description"
+          placeholder="Design a landing page for the new product launch"
           onChange={handleInputChange}
         />
       </label>
