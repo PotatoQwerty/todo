@@ -7,7 +7,7 @@ import { useState, type ChangeEvent } from "react";
 import type { priorityVals } from "./types/task";
 
 function App() {
-  const { tasks, deleteTask, markDone } = useTasks();
+  const { tasks, deleteTask, markDone, editTask } = useTasks();
   const [selectedView, setSelectedView] = useState<priorityVals | "">("");
 
   const visibleTasks = selectedView
@@ -77,6 +77,7 @@ function App() {
                   key={task.id}
                   deleteTask={() => deleteTask(task.id)}
                   markTaskDone={() => markDone(task.id)}
+                  editTask={editTask}
                 />
               ))}
             </div>

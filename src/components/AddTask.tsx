@@ -15,9 +15,11 @@ function AddTask() {
 
   const addTask = useTasks().addTask;
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
-    setTask({ ...task, [name]: value });
+    setTask((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAddTask = () => {
@@ -26,8 +28,13 @@ function AddTask() {
     today.setHours(0, 0, 0, 0);
     const currentDate = today.getTime();
 
-    if (!task.name) {
+    if (!task.name.trim()) {
       alert("Task name cannot be empty!");
+      return;
+    }
+
+    if (!task.description.trim()) {
+      alert("Task description cannot be empty!");
       return;
     }
 
@@ -91,7 +98,6 @@ function AddTask() {
         <span>Task description</span>
         <textarea
           className="field-input"
-          type="text"
           name="description"
           value={task.description}
           id="task-description"

@@ -6,45 +6,74 @@ export const TasksContext = createContext<{
   addTask: (task: Task) => void;
   deleteTask: (id: number) => void;
   markDone: (id: number) => void;
+  editTask: (id: number, updatedTask: Task) => void;
 } | null>(null);
 
 export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [tasks, setTasks] = useState<Task[]>(() => {
     const storedTasks = localStorage.getItem("tasks");
-    return storedTasks ? JSON.parse(storedTasks) : [];
+
+    if (!storedTasks) {
+      return [];
+    }
+
+    try {
+      return JSON.parse(storedTasks) as Task[];
+    } catch {
+      return [];
+    }
   });
+
+  const persistTasks = (nextTasks: Task[]) => {
+    localStorage.setItem("tasks", JSON.stringify(nextTasks));
+  };
 
   const addTask = (task: Task) => {
     setTasks((prevTasks) => {
       const updatedTasks = [...prevTasks, task];
-      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+      persistTasks(updatedTasks);
       return updatedTasks;
     });
   };
 
   const deleteTask = (id: number) => {
-    setTasks(() => {
-      const updatedTasks = tasks.filter((task) => task.id !== id);
-      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    setTasks((prevTasks) => {
+      const updatedTasks = prevTasks.filter((task) => task.id !== id);
+      persistTasks(updatedTasks);
       return updatedTasks;
     });
   };
 
   const markDone = (id: number) => {
-    setTasks(() => {
-      const updatedTasks = tasks.map((task) => {
+    setTasks((prevTasks) => {
+      const updatedTasks = prevTasks.map((task) => {
         if (task.id === id) {
           return { ...task, finished: !task.finished };
         }
         return task;
       });
-      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+      persistTasks(updatedTasks);
+      return updatedTasks;
+    });
+  };
+
+  const editTask = (id: number, updatedTask: Task) => {
+    setTasks((prevTasks) => {
+      const updatedTasks = prevTasks.map((task) => {
+        if (task.id === id) {
+          return { ...task, ...updatedTask, id };
+        }
+        return task;
+      });
+      persistTasks(updatedTasks);
       return updatedTasks;
     });
   };
 
   return (
-    <TasksContext.Provider value={{ tasks, addTask, deleteTask, markDone }}>
+    <TasksContext.Provider
+      value={{ tasks, addTask, deleteTask, markDone, editTask }}
+    >
       {children}
     </TasksContext.Provider>
   );

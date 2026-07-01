@@ -1,11 +1,21 @@
+import { useState } from "react";
 import type { Task } from "../types/task";
+import EditTask from "./EditTask";
 
 interface TaskCardInterface {
   task: Task;
   deleteTask: () => void;
   markTaskDone: () => void;
+  editTask: (id: number, updatedTask: Task) => void;
 }
-function TaskCard({ task, deleteTask, markTaskDone }: TaskCardInterface) {
+function TaskCard({
+  task,
+  deleteTask,
+  markTaskDone,
+  editTask,
+}: TaskCardInterface) {
+  const [isEditing, setIsEditing] = useState(false);
+
   const priorityClass =
     task.priority === "High"
       ? "task-card-high"
@@ -65,7 +75,24 @@ function TaskCard({ task, deleteTask, markTaskDone }: TaskCardInterface) {
             <path d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"></path>
           </svg>
         </button>
+        <button
+          className="edit-toggle-button"
+          onClick={() => setIsEditing((prev) => !prev)}
+        >
+          {isEditing ? "Close" : "Edit"}
+        </button>
       </div>
+
+      {isEditing && (
+        <EditTask
+          task={task}
+          onCancel={() => setIsEditing(false)}
+          onSave={(updatedTask) => {
+            editTask(task.id, updatedTask);
+            setIsEditing(false);
+          }}
+        />
+      )}
     </div>
   );
 }

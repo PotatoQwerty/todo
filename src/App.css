@@ -48,8 +48,8 @@
   box-shadow:
     0 24px 60px rgba(35, 52, 88, 0.16),
     inset 0 1px 0 rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
 }
 
 .hero-panel {
@@ -490,6 +490,74 @@
 
 .buttons-container {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   justify-content: end;
+  margin-top: 16px;
+}
+
+.buttons-container button {
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.36);
+  padding: 8px 10px;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease;
+}
+
+.buttons-container button:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.52);
+}
+
+.edit-toggle-button {
+  padding-inline: 12px !important;
+  font-weight: 600;
+  color: #18304e;
+}
+
+.edit-task-panel {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.edit-task-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #14263e;
+}
+
+.edit-task-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.edit-task-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.secondary-button {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.42);
+  color: #18304e;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-save-button {
+  width: auto;
+  margin-top: 0;
+  min-height: 42px;
+  padding-inline: 14px;
 }
